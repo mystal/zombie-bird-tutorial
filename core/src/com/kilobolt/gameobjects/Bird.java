@@ -1,5 +1,6 @@
 package com.kilobolt.gameobjects;
 
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Bird {
@@ -11,12 +12,15 @@ public class Bird {
     private int width;
     private int height;
 
+    private Circle boundingCircle;
+
     public Bird(float x, float y, int width, int height) {
         this.width = width;
         this.height = height;
         position = new Vector2(x, y);
         velocity = new Vector2(0, 0);
         acceleration = new Vector2(0, 460);
+        boundingCircle = new Circle();
     }
 
     public void update(float delta) {
@@ -27,6 +31,10 @@ public class Bird {
         }
 
         position.add(velocity.cpy().scl(delta));
+
+        // Set the circle's center to be (9, 6) with respect to the bird.
+        // Set the circle's radius to be 6.5f;
+        boundingCircle.set(position.x + 9, position.y + 6, 6.5f);
 
         // Rotate counterclockwise
         if (velocity.y < 0) {
@@ -77,5 +85,9 @@ public class Bird {
 
     public float getRotation() {
         return rotation;
+    }
+
+    public Circle getBoundingCircle() {
+        return boundingCircle;
     }
 }
