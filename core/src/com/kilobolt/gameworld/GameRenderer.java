@@ -109,6 +109,14 @@ public class GameRenderer {
                     1, 1, bird.getRotation());
         }
 
+        // Convert integer into String
+        String score = world.getScore() + "";
+
+        // Draw shadow first
+        AssetLoader.shadow.draw(batcher, score, (136 / 2) - (3 * score.length()), 12);
+        // Draw text
+        AssetLoader.font.draw(batcher, score, (136 / 2) - (3 * score.length() - 1), 11);
+
         // End SpriteBatch
         batcher.end();
     }

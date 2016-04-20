@@ -2,6 +2,7 @@ package com.kilobolt.gameobjects;
 
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
+import com.kilobolt.zbhelpers.AssetLoader;
 
 public class Bird {
     private Vector2 position;
@@ -12,6 +13,8 @@ public class Bird {
     private int width;
     private int height;
 
+    private boolean isAlive;
+
     private Circle boundingCircle;
 
     public Bird(float x, float y, int width, int height) {
@@ -20,6 +23,7 @@ public class Bird {
         position = new Vector2(x, y);
         velocity = new Vector2(0, 0);
         acceleration = new Vector2(0, 460);
+        isAlive = true;
         boundingCircle = new Circle();
     }
 
@@ -46,7 +50,7 @@ public class Bird {
         }
 
         // Rotate clockwise
-        if (isFalling()) {
+        if (isFalling() || !isAlive) {
             rotation += 480 * delta;
             if (rotation > 90) {
                 rotation = 90;
@@ -56,7 +60,20 @@ public class Bird {
     }
 
     public void onClick() {
-        velocity.y = -140;
+        if (isAlive) {
+            AssetLoader.flap.play();
+            velocity.y = -140;
+        }
+    }
+
+    public void die() {
+        isAlive = false;
+        velocity.y = 0;
+    }
+
+    public void decelerate() {
+        // We want the bird to stop accelerating downwards once it is dead.
+        acceleration.y = 0;
     }
 
     public boolean isFalling() {
@@ -64,7 +81,7 @@ public class Bird {
     }
 
     public boolean shouldntFlap() {
-        return velocity.y > 70;
+        return velocity.y > 70 || !isAlive;
     }
 
     public float getX() {
@@ -89,5 +106,9 @@ public class Bird {
 
     public Circle getBoundingCircle() {
         return boundingCircle;
+    }
+
+    public boolean isAlive() {
+        return isAlive;
     }
 }

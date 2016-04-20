@@ -1,6 +1,11 @@
 package com.kilobolt.gameobjects;
 
+import com.kilobolt.gameworld.GameWorld;
+import com.kilobolt.zbhelpers.AssetLoader;
+
 public class ScrollHandler {
+
+    private GameWorld world;
 
     // ScrollHandler will create all five objects that we need.
     private Grass frontGrass, backGrass;
@@ -16,7 +21,8 @@ public class ScrollHandler {
 
     // Constructor receives a float that tells us where we need to create our
     // Grass and Pipe objects.
-    public ScrollHandler(float yPos) {
+    public ScrollHandler(GameWorld world, float yPos) {
+        this.world = world;
         frontGrass = new Grass(0, yPos, 143, 11, SCROLL_SPEED);
         backGrass = new Grass(frontGrass.getTailX(), yPos, 143, 11, SCROLL_SPEED);
 
@@ -63,7 +69,32 @@ public class ScrollHandler {
 
     // Return true if ANY pipe hits the bird.
     public boolean collides(Bird bird) {
+        if (!pipe1.isScored()
+                && pipe1.getX() + (pipe1.getWidth() / 2) < bird.getX()
+                + bird.getWidth()) {
+            addScore(1);
+            pipe1.setScored(true);
+            AssetLoader.coin.play();
+        } else if (!pipe2.isScored()
+                && pipe2.getX() + (pipe2.getWidth() / 2) < bird.getX()
+                + bird.getWidth()) {
+            addScore(1);
+            pipe2.setScored(true);
+            AssetLoader.coin.play();
+
+        } else if (!pipe3.isScored()
+                && pipe3.getX() + (pipe3.getWidth() / 2) < bird.getX()
+                + bird.getWidth()) {
+            addScore(1);
+            pipe3.setScored(true);
+            AssetLoader.coin.play();
+        }
+
         return pipe1.collides(bird) || pipe2.collides(bird) || pipe3.collides(bird);
+    }
+
+    private void addScore(int increment) {
+        world.addScore(increment);
     }
 
     // The getters for our five instance variables
