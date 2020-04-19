@@ -12,18 +12,19 @@ public class GameWorld {
     private ScrollHandler scroller;
     private Rectangle ground;
     private int score;
+    private float runTime;
 
     private int midPointY;
 
     private GameState currentState;
 
     public enum GameState {
-        READY, RUNNING, GAMEOVER, HIGHSCORE
+        MENU, READY, RUNNING, GAMEOVER, HIGHSCORE
     }
 
     public GameWorld(int midPointY) {
         this.midPointY = midPointY;
-        currentState = GameState.READY;
+        currentState = GameState.MENU;
         bird = new Bird(33, midPointY - 5, 17, 12);
         // The grass should start 66 pixels below the midPointY
         scroller = new ScrollHandler(this, midPointY + 66);
@@ -33,6 +34,7 @@ public class GameWorld {
     public void update(float delta) {
 
         switch (currentState) {
+        case MENU:
         case READY:
             updateReady(delta);
             break;
@@ -47,7 +49,8 @@ public class GameWorld {
     }
 
     private void updateReady(float delta) {
-        // Do nothing for now
+        bird.updateReady(runTime);
+        scroller.updateReady(delta);
     }
 
     public void updateRunning(float delta) {
@@ -85,6 +88,10 @@ public class GameWorld {
         return bird;
     }
 
+    public int getMidPointY() {
+        return midPointY;
+    }
+
     public ScrollHandler getScroller() {
         return scroller;
     }
@@ -97,12 +104,12 @@ public class GameWorld {
         score += increment;
     }
 
-    public boolean isReady() {
-        return currentState == GameState.READY;
-    }
-
     public void start() {
         currentState = GameState.RUNNING;
+    }
+
+    public void ready() {
+        currentState = GameState.READY;
     }
 
     public void restart() {
@@ -112,11 +119,23 @@ public class GameWorld {
         currentState = GameState.READY;
     }
 
+    public boolean isMenu() {
+        return currentState == GameState.MENU;
+    }
+
+    public boolean isReady() {
+        return currentState == GameState.READY;
+    }
+
     public boolean isGameOver() {
         return currentState == GameState.GAMEOVER;
     }
 
     public boolean isHighScore() {
         return currentState == GameState.HIGHSCORE;
+    }
+
+    public boolean isRunning() {
+        return currentState == GameState.RUNNING;
     }
 }
